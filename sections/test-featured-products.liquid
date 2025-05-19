@@ -14,7 +14,31 @@
   }
 {%- endstyle -%}
 
-<div class="test-featured-products section-{{ section.id }}-padding"></div>
+<div class="test-featured-products section-{{ section.id }}-padding">
+  <div class="page-width">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="test-featured-products__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="test-featured-products__title h2">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="test-featured-products__subtitle rte">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="test-featured-products__products">
+      {%- if request.page_type == 'collection' and section.settings.product_list == blank -%}
+        {%- for product in collection.products limit: 10 -%}
+          {%- render 'boa-product-card', product: product -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for product in section.settings.product_list -%}
+          {%- render 'boa-product-card', product: product -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
 
 {% schema %}
 {
@@ -39,11 +63,6 @@
       "type": "product_list",
       "id": "products_list",
       "label": "t:sections.test-featured-products.settings.products_list.name"
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "t:sections.test-featured-products.settings.collection.name"
     },
     {
       "type": "header",
