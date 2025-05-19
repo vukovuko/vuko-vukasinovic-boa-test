@@ -1642,8 +1642,27 @@
     "main-account": {
       "name": "Account"
     },
-    "main-activate-account": {
-      "name": "Account activation"
+    "test-featured-products": {
+      "name": "BOA Featured products",
+      "settings": {
+        "title": {
+          "name": "Title",
+          "default": "Featured products"
+        },
+        "subtitle": {
+          "name": "Subtitle",
+          "default": "Talk about your Featured products"
+        },
+        "products_list": {
+          "name": "Product list"
+        },
+        "collection": {
+          "name": "Collection"
+        }
+      },
+      "presets": {
+        "name": "BOA Featured products"
+      }
     },
     "main-addresses": {
       "name": "Addresses"
