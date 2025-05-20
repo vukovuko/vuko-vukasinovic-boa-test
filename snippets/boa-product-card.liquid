@@ -1,0 +1,91 @@
+<boa-product-card class="tfp-product-card">
+  <a class="full-unstyled-link" href="{{ product.url }}">
+    <div class="">
+      <div class="tfp-product-card__price-wrapper">
+        {%- if product.compare_at_price and product.compare_at_price > product.price -%}
+          <span class="tfp-product-card__price tfp-product-card__price--original">
+            <s>{{ product.compare_at_price | money }}</s>
+          </span>
+        {%- endif -%}
+        <span class="tfp-product-card__price tfp-product-card__price--current">
+          {{ product.price | money }}
+        </span>
+      </div>
+      {% if product.vendor %}
+        <div class="tfp-product-card__vendor">
+          {{ product.vendor }}
+        </div>
+      {% endif %}
+      <div class="tfp-product-card__title">
+        {% liquid
+          assign title_color = '#FF0000'
+          if product.metafields.boa_test.title_color != blank
+            assign title_color = product.metafields.boa_test.title_color.value
+          endif
+        %}
+        <h3 style="color: {{ title_color }}">{{ product.title }}</h3>
+      </div>
+      {% if product.featured_image != blank %}
+        <div class="tfp-product-card__image">
+          <img
+            srcset="
+              {%- if product.featured_media.width >= 165 -%}{{ product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+              {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+              {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+              {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+              {{ product.featured_media | image_url }} {{ product.featured_media.width }}w
+            "
+            src="{{ product.featured_media | image_url: width: 533 }}"
+            sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+            alt="{{ product.featured_media.alt | escape }}"
+            class="motion-reduce"
+            loading="lazy"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+          >
+        </div>
+      {% else %}
+        <div
+          class="product-media-container global-media-settings gradient{% if section.settings.constrain_to_viewport %} constrain-height{% endif %}"
+          style="--ratio: 1.0; --preview-ratio: 1.0;"
+        >
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+  </a>
+  <div class="ftp-product-card__button-wrapper">
+    <div class="ftp-product-card__button">
+      {%- assign form_id = 'boa-add-to-cart' | append: section_id | append: card_product.id -%}
+      {%- form 'product',
+        product,
+        id: form_id,
+        class: 'tfp-product-form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--secondary"
+          {% if product.selected_or_first_available_variant.available == false %}
+            disabled
+          {% endif %}
+        >
+          <span class="tfp-button-text">
+            {%- if product.selected_or_first_available_variant.available -%}
+              {{ 'products.product.add_to_cart' | t }}
+            {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+            {%- endif -%}
+          </span>
+        </button>
+      {% endform %}
+    </div>
+  </div>
+  <div id="product-{{ product.id }}-placeholder"></div>
+</boa-product-card>

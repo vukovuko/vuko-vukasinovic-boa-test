@@ -1653,11 +1653,17 @@
           "name": "Subtitle",
           "default": "Talk about your Featured products"
         },
-        "products_list": {
+        "product_list": {
           "name": "Product list"
         },
         "collection": {
           "name": "Collection"
+        },
+        "max_items_per_row": {
+          "name": "Max items per row"
+        },
+        "min_column_size": {
+          "name": "Min column size"
         }
       },
       "presets": {
