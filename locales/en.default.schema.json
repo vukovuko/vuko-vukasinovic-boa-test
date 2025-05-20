@@ -1656,6 +1656,9 @@
         "product_list": {
           "name": "Product list"
         },
+        "default_title_color": {
+          "name": "Default title color"
+        },
         "collection": {
           "name": "Collection"
         },

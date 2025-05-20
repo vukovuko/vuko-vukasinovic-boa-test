@@ -18,7 +18,7 @@
       {% endif %}
       <div class="tfp-product-card__title">
         {% liquid
-          assign title_color = '#FF0000'
+          assign title_color = section.settings.default_title_color
           if product.metafields.boa_test.title_color != blank
             assign title_color = product.metafields.boa_test.title_color.value
           endif
@@ -58,7 +58,7 @@
   </a>
   <div class="ftp-product-card__button-wrapper">
     <div class="ftp-product-card__button">
-      {%- assign form_id = 'boa-add-to-cart' | append: section_id | append: card_product.id -%}
+      {%- assign form_id = 'boa-add-to-cart' | append: section_id | append: product.id -%}
       {%- form 'product',
         product,
         id: form_id,
