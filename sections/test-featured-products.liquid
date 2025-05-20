@@ -6,10 +6,23 @@
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
+  .tfp-grid-{{ section.id }} {
+    display: grid;
+    column-gap: var(--grid-mobile-horizontal-spacing);
+    row-gap: var(--grid-mobile-vertical-spacing);
+    grid-template-columns: 1fr;
+  }
+
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    .tfp-grid-{{ section.id }} {
+      column-gap: var(--grid-desktop-horizontal-spacing);
+      row-gap: var(--grid-desktop-vertical-spacing);
+      grid-template-columns: repeat({{ section.settings.max_items_per_row }}, minmax({{ section.settings.min_column_size }}px, 1fr));
     }
   }
 {%- endstyle -%}
@@ -19,14 +32,18 @@
     {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
       <div class="test-featured-products__header">
         {%- if section.settings.title != blank -%}
-          <h2 class="test-featured-products__title h2">{{ section.settings.title }}</h2>
+          <h2 class="test-featured-products__title text-align--{{ section.settings.title_alignment }} h2">
+            {{ section.settings.title }}
+          </h2>
         {%- endif -%}
         {%- if section.settings.subtitle != blank -%}
-          <div class="test-featured-products__subtitle rte">{{ section.settings.subtitle }}</div>
+          <div class="test-featured-products__subtitle text-align--{{ section.settings.subtitle_alignment }} rte">
+            {{ section.settings.subtitle }}
+          </div>
         {%- endif -%}
       </div>
     {%- endif -%}
-    <div class="test-featured-products__products">
+    <div class="test-featured-products__products tfp-grid-{{ section.id }}">
       {%- if request.page_type == 'collection' and section.settings.product_list == blank -%}
         {%- for product in collection.products limit: 10 -%}
           {%- render 'boa-product-card', product: product -%}
@@ -54,15 +71,75 @@
       "default": "t:sections.test-featured-products.settings.title.default"
     },
     {
+      "type": "select",
+      "id": "title_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:settings_schema.global.settings.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:settings_schema.global.settings.text_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:settings_schema.global.settings.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:settings_schema.global.settings.text_alignment.label"
+    },
+    {
       "type": "inline_richtext",
       "id": "subtitle",
       "label": "t:sections.test-featured-products.settings.subtitle.name",
       "default": "t:sections.test-featured-products.settings.subtitle.default"
     },
     {
+      "type": "select",
+      "id": "subtitle_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:settings_schema.global.settings.text_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:settings_schema.global.settings.text_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:settings_schema.global.settings.text_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:settings_schema.global.settings.text_alignment.label"
+    },
+    {
       "type": "product_list",
-      "id": "products_list",
-      "label": "t:sections.test-featured-products.settings.products_list.name"
+      "id": "product_list",
+      "label": "t:sections.test-featured-products.settings.product_list.name",
+      "info": "If the section is placed on a collection page, it will use collections first 10 products unless this field is populated with products."
+    },
+    {
+      "type": "range",
+      "id": "max_items_per_row",
+      "label": "t:sections.test-featured-products.settings.max_items_per_row.name",
+      "default": 4,
+      "min": 1,
+      "max": 7,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "min_column_size",
+      "label": "t:sections.test-featured-products.settings.min_column_size.name",
+      "default": 200,
+      "min": 50,
+      "max": 500,
+      "unit": "px",
+      "step": 5
     },
     {
       "type": "header",
